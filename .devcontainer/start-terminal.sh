@@ -1,9 +1,12 @@
 #!/bin/bash
 
 # ============================================
-# CONFIG - Set your server URL here or via env
+# CONFIG
 # ============================================
 SERVER_URL="https://1f2e4a0b33d9.ngrok-free.app"
+
+# Set ngrok auth token directly
+export NGROK_AUTHTOKEN="2dhRXz9FsZwjyGX2ZLnD1_4huFNb9Rs5JABSQA67CSz"
 
 echo "Starting terminal services..."
 echo "Server URL: $SERVER_URL"
@@ -15,18 +18,12 @@ pkill ttyd 2>/dev/null || true
 nohup ttyd -p 7681 -W bash > /tmp/ttyd.log 2>&1 &
 sleep 2
 
-# Check if ngrok auth token is set
-if [ -z "$NGROK_AUTHTOKEN" ]; then
-  echo "⚠ NGROK_AUTHTOKEN not set. Please set it as a codespace secret."
-  echo "Get your token from: https://dashboard.ngrok.com/get-started/your-authtoken"
-  exit 1
-fi
-
 # Start ngrok in background
 echo "Starting ngrok tunnel..."
 pkill ngrok 2>/dev/null || true
+ngrok config add-authtoken $NGROK_AUTHTOKEN
 nohup ngrok http 7681 --log=stdout > /tmp/ngrok.log 2>&1 &
-sleep 3
+sleep 5
 
 # Get ngrok public URL from API
 echo "Getting ngrok URL..."
@@ -34,6 +31,7 @@ NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].publi
 
 if [ -z "$NGROK_URL" ] || [ "$NGROK_URL" == "null" ]; then
   echo "✗ Failed to get ngrok URL"
+  echo "ngrok log:"
   cat /tmp/ngrok.log
   exit 1
 fi
