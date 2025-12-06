@@ -2,7 +2,7 @@
     "name": "Web Terminal Codespace",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "postCreateCommand": "bash .devcontainer/post-create.sh",
-    "postStartCommand": "nohup ttyd -p 7681 -W tmux new -A -s main > /tmp/ttyd.log 2>&1 &",
+    "postStartCommand": "bash .devcontainer/post-start.sh",
     "forwardPorts": [7681],
     "portsAttributes": {
       "7681": {
