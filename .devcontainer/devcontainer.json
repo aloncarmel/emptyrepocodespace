@@ -1,14 +1,16 @@
 {
-    "name": "Web Terminal",
+    "name": "Claude Code Terminal",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "features": {
-      "ghcr.io/devcontainers/features/github-cli:1": {}
+      "ghcr.io/devcontainers/features/github-cli:1": {},
+      "ghcr.io/devcontainers/features/node:1": {
+        "version": "20"
+      }
     },
     "onCreateCommand": "bash .devcontainer/setup.sh",
     "postStartCommand": "bash .devcontainer/start-terminal.sh",
     "forwardPorts": [7681, 4040],
     "portsAttributes": {
-      "7681": { "label": "ttyd", "visibility": "private" },
-      "4040": { "label": "ngrok", "visibility": "private" }
+      "7681": { "label": "ttyd", "visibility": "private" }
     }
   }
